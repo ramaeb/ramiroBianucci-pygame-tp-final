@@ -1,7 +1,7 @@
 import pygame as pg
+from ..constantes import *
 from models.constantes import ANCHO_VENTANA, DEBUG,ALTO_VENTANA
 
-GRAVEDAD = 0.8
 class Jugador(pg.sprite.Sprite):
 
     def __init__(self,x,y,escala,velocidad):
@@ -11,6 +11,7 @@ class Jugador(pg.sprite.Sprite):
         self.velocidad = velocidad #Cuantos pixeles se mueve el personaje al presionar tecla movimiento.
         self.direccion = True #Verdadero para la derecha y falso flipeo para la izquierda
         self.lista_animacion = []
+        self.vel_y = 0
         self.flip = False #Variable para girar el sprite izq y der
         self.tiempo_animacion = pg.time.get_ticks()
         self.accion = 0
@@ -72,7 +73,8 @@ class Jugador(pg.sprite.Sprite):
 
 
     def movimiento_lateral(self,mueve_dere,mueve_izq):    
-        #Coordenadas predecibles para el movimiento.
+        #Coordenadas predecibles para el movimiento, 
+        # sirven para parar movimientos o para las mismas colisiones.
         dx = 0
         dy = 0
 
@@ -85,11 +87,18 @@ class Jugador(pg.sprite.Sprite):
             self.direccion = False
             self.flip = True
         #Seteo de la posicion del jugador
+        if self.salta:
+            self.vel_y = -11
+            self.salta = False
+        self.vel_y += GRAVEDAD
+        dy += self.vel_y
+        if self.rect.bottom + dy > 300:
+            dy = 300 - self.rect.bottom
+        
         self.rect.x += dx
         self.rect.y += dy
 
-        if self.salta:
-            pass
+        
 
 
     def disparo(self,dispara):

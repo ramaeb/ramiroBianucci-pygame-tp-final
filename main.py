@@ -10,6 +10,7 @@ pg.init()
 clock = pg.time.Clock()
 
 color = (0,200,0)
+color_1 = (0,0,0)
 ventana = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 
 mueve_dere = False
@@ -30,6 +31,7 @@ while juego_ejecutandose:
         
     #print(delta_ms)
     lista_eventos = pg.event.get()
+    
     for event in lista_eventos:
         
         match event.type:
@@ -40,7 +42,8 @@ while juego_ejecutandose:
                 break
             
             case pg.KEYDOWN:
-                if event.key == pg.K_UP:
+                if event.key == pg.K_UP and saltando == False:
+                    jugador.salta = True
                     saltando = True
                 if event.key == pg.K_RIGHT:
                     mueve_dere = True
@@ -53,7 +56,7 @@ while juego_ejecutandose:
 
             case pg.KEYUP:
                 if event.key == pg.K_UP:
-                    saltando = False
+                    jugador.salta = False
                 if event.key == pg.K_RIGHT:
                     mueve_dere = False
                 if event.key == pg.K_LEFT:
@@ -64,6 +67,7 @@ while juego_ejecutandose:
 
 
     ventana.fill(color) #llenamos de color verde la venta
+    pg.draw.line(ventana,color_1,(0,300),(ANCHO_VENTANA,200))
     #screen.blit(back_img, back_img.get_rect())
     
     jugador.draw(screen)
