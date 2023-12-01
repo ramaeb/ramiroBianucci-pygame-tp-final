@@ -15,8 +15,10 @@ class Jugador(pg.sprite.Sprite):
         self.flip = False #Variable para girar el sprite izq y der
         self.tiempo_animacion = pg.time.get_ticks()
         self.accion = 0
+        self.colisiona = False #Flag para la colision
+        self.cayendo = False #Flag para la caida del jugador
         self.index_animacion = 0
-        self.salta = False #Variable para saber si está saltando o no.
+        self.salta = False #Activa el salto
         #IDLE
         lista_temporal = []
         for i in range(5):
@@ -37,11 +39,10 @@ class Jugador(pg.sprite.Sprite):
             img = pg.image.load(f'assets/img/player/shoot/{i}.png')
             img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
             lista_temporal.append(img)
-
         self.lista_animacion.append(lista_temporal)
 
         lista_temporal = []
-        for i in range(3):
+        for i in range(1):
             img = pg.image.load(f'assets/img/player/jump/{i}.png')
             img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
             lista_temporal.append(img)
@@ -87,13 +88,25 @@ class Jugador(pg.sprite.Sprite):
             self.direccion = False
             self.flip = True
         #Seteo de la posicion del jugador
-        if self.salta:
-            self.vel_y = -11
-            self.salta = False
-        self.vel_y += GRAVEDAD
-        dy += self.vel_y
+        if self.cayendo == True:
+            if self.salta:
+                self.vel_y = -11
+                self.salta = False
+            else:
+                self.vel_y += GRAVEDAD
+                dy += self.vel_y
+        
+        #COLISION PISO INVENTADO
         if self.rect.bottom + dy > 300:
             dy = 300 - self.rect.bottom
+            self.colisiona = True
+            self.cayendo = False
+        if self.rect.left <= 0:
+            self.rect.left = 0
+            print("MURO IZ")
+        if self.rect.right + dx > ANCHO_VENTANA:
+            dx = ANCHO_VENTANA - self.rect.right
+            print("MURO")
         
         self.rect.x += dx
         self.rect.y += dy

@@ -22,41 +22,40 @@ mueve_dere = False
 mueve_izq = False
 saltando = False
 dispara = False
+jugador.cayendo = True
 while juego_ejecutandose:
     #MIENTRAS EL JUGADOR ESTÉ VIVO SE TOMAN TODOS LOS MOVIMIENTOS
     if jugador.jugador_vivo:
         jugador.movimiento_lateral(mueve_dere,mueve_izq)
         jugador.animacion()
-        cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara)
+        cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,jugador.cayendo,jugador.colisiona)
         
     #print(delta_ms)
     lista_eventos = pg.event.get()
     
     for event in lista_eventos:
-        
         match event.type:
-            
             case pg.QUIT:
                 print('Estoy CERRANDO el JUEGO')
                 juego_ejecutandose = False
                 break
-            
+            #SETEO DE TECLAS
             case pg.KEYDOWN:
-                if event.key == pg.K_UP and saltando == False:
-                    jugador.salta = True
-                    saltando = True
                 if event.key == pg.K_RIGHT:
                     mueve_dere = True
                 if event.key == pg.K_LEFT:
                     mueve_izq = True
-                
                 if event.key == pg.K_e:
                     dispara = True
                     print("Ataco")
 
+                if (event.key == pg.K_UP) and (not jugador.cayendo):
+                    jugador.salta = True
+                    jugador.cayendo = True
+    
             case pg.KEYUP:
-                if event.key == pg.K_UP:
-                    jugador.salta = False
+                if (event.key == pg.K_UP):
+                    jugador.cayendo = True
                 if event.key == pg.K_RIGHT:
                     mueve_dere = False
                 if event.key == pg.K_LEFT:
@@ -67,7 +66,7 @@ while juego_ejecutandose:
 
 
     ventana.fill(color) #llenamos de color verde la venta
-    pg.draw.line(ventana,color_1,(0,300),(ANCHO_VENTANA,200))
+    pg.draw.line(ventana,color_1,(0,300),(ANCHO_VENTANA,300))
     #screen.blit(back_img, back_img.get_rect())
     
     jugador.draw(screen)
