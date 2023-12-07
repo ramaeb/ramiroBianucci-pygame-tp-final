@@ -49,6 +49,13 @@ class Jugador(pg.sprite.Sprite):
 
         self.lista_animacion.append(lista_temporal)
     
+        lista_temporal = []
+        for i in range(5):
+            img = pg.image.load(f'assets/img/player/death/{i}.png')
+            img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
+            lista_temporal.append(img)
+        self.lista_animacion.append(lista_temporal)
+        
         self.image = self.lista_animacion[self.accion][self.index_animacion]
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)

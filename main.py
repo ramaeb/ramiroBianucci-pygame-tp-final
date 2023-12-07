@@ -1,5 +1,6 @@
 import pygame as pg
 from models.auxiliar import *
+from models.enemy.main_enemy import *
 from models.constantes import (
     ALTO_VENTANA, ANCHO_VENTANA, FPS
 )
@@ -8,9 +9,11 @@ from models.player.main_player import Jugador
 screen = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 pg.init()
 clock = pg.time.Clock()
-
 color = (0,200,0)
 color_1 = (0,0,0)
+
+pg.display.flip()
+
 ventana = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 
 mueve_dere = False
@@ -24,13 +27,27 @@ saltando = False
 dispara = False
 jugador.cayendo = True
 while juego_ejecutandose:
+
+
     #MIENTRAS EL JUGADOR ESTÉ VIVO SE TOMAN TODOS LOS MOVIMIENTOS
     if jugador.jugador_vivo:
+        muerto = False
         jugador.movimiento_lateral(mueve_dere,mueve_izq)
         jugador.animacion()
-        cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,jugador.cayendo,jugador.colisiona)
-        
-    #print(delta_ms)
+        cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,jugador.cayendo,muerto)
+    else:
+        muerto = True
+        mueve_dere = False
+        mueve_izq = False
+        jugador.animacion()
+    cuadrado = pg.draw.rect(ventana,color_1,pg.Rect(100,200,60,60))
+    enemies = pg.sprite.Group()
+    enemy = Enemigo()
+    enemies.add(enemy)
+    colision = pg.sprite.spritecollide(jugador, enemies, False)
+
+    if colision:
+        print("COLISION!")
     lista_eventos = pg.event.get()
     
     for event in lista_eventos:
@@ -67,8 +84,10 @@ while juego_ejecutandose:
 
     ventana.fill(color) #llenamos de color verde la venta
     pg.draw.line(ventana,color_1,(0,300),(ANCHO_VENTANA,300))
-    #screen.blit(back_img, back_img.get_rect())
     
+    #screen.blit(back_img, back_img.get_rect())
+    enemies.update()
+    enemies.draw(screen)
     jugador.draw(screen)
     delta_ms = clock.tick(FPS)
     pg.display.update()
