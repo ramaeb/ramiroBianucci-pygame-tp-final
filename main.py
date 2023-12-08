@@ -11,11 +11,13 @@ pg.init()
 clock = pg.time.Clock()
 color = (0,200,0)
 color_1 = (0,0,0)
+back_img = pg.image.load('./assets/img/background/3.png')
+back_img = pg.transform.scale(back_img, (ANCHO_VENTANA, ALTO_VENTANA))
+
 
 pg.display.flip()
 
 ventana = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
-
 mueve_dere = False
 mueve_izq = False
 
@@ -26,6 +28,7 @@ mueve_izq = False
 saltando = False
 dispara = False
 jugador.cayendo = True
+
 while juego_ejecutandose:
 
 
@@ -48,6 +51,7 @@ while juego_ejecutandose:
 
     if colision:
         print("COLISION!")
+#ventana = pg.image.load(R"assets\img\background\background.png")
     lista_eventos = pg.event.get()
     
     for event in lista_eventos:
@@ -82,13 +86,13 @@ while juego_ejecutandose:
 
 
 
-    ventana.fill(color) #llenamos de color verde la venta
+    screen.blit(back_img, back_img.get_rect())
     pg.draw.line(ventana,color_1,(0,300),(ANCHO_VENTANA,300))
-    
     #screen.blit(back_img, back_img.get_rect())
     enemies.update()
     enemies.draw(screen)
     jugador.draw(screen)
+    
     delta_ms = clock.tick(FPS)
     pg.display.update()
 

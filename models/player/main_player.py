@@ -1,4 +1,5 @@
 import pygame as pg
+import os
 from ..constantes import *
 from models.constantes import ANCHO_VENTANA, DEBUG,ALTO_VENTANA
 
@@ -20,42 +21,19 @@ class Jugador(pg.sprite.Sprite):
         self.index_animacion = 0
         self.salta = False #Activa el salto
         #IDLE
-        lista_temporal = []
-        for i in range(5):
-            img = pg.image.load(f'assets/img/player/idle/{i}.png')
-            img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
-            lista_temporal.append(img)
-        self.lista_animacion.append(lista_temporal)
-        
-        lista_temporal = []
-        for i in range(7):
-            img = pg.image.load(f'assets/img/player/walk/{i}.png')
-            img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
-            lista_temporal.append(img)
-        self.lista_animacion.append(lista_temporal)
+        #CARGA LAS ANIMACIONES
+        tipo_animacion = ['idle','walk','jump','shoot','death']
+        for animacion in tipo_animacion:
+            #LISTA TEMPORAL
+            lista_temporal = []
+            #AGREGA CADA IMAGEN A LA LISTA E ITERA
+            num_frames = len(os.listdir(f'assets/img/player/{animacion}'))
+            for i in range(num_frames):
+                img = pg.image.load(f'assets/img/player/{animacion}/{i}.png')
+                img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
+                lista_temporal.append(img)
+            self.lista_animacion.append(lista_temporal)
 
-        lista_temporal = []
-        for i in range(7):
-            img = pg.image.load(f'assets/img/player/shoot/{i}.png')
-            img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
-            lista_temporal.append(img)
-        self.lista_animacion.append(lista_temporal)
-
-        lista_temporal = []
-        for i in range(1):
-            img = pg.image.load(f'assets/img/player/jump/{i}.png')
-            img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
-            lista_temporal.append(img)
-
-        self.lista_animacion.append(lista_temporal)
-    
-        lista_temporal = []
-        for i in range(5):
-            img = pg.image.load(f'assets/img/player/death/{i}.png')
-            img = pg.transform.scale(img, ((img.get_width()* escala), (img.get_height()* escala)))
-            lista_temporal.append(img)
-        self.lista_animacion.append(lista_temporal)
-        
         self.image = self.lista_animacion[self.accion][self.index_animacion]
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
@@ -128,3 +106,7 @@ class Jugador(pg.sprite.Sprite):
     def draw(self,screen):
         #Dibuja el personaje en pantalla, tambien dibuja si esta el flipeo de la imagen.
         screen.blit(pg.transform.flip(self.image,self.flip,False),self.rect) 
+
+class Bullet(pg.sprite.Sprite):
+    def __init__(self,x,y,velocidad):  
+        pg.sprite.Sprite.__init__(self)
