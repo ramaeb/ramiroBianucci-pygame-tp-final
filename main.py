@@ -16,33 +16,29 @@ back_img = pg.transform.scale(back_img, (ANCHO_VENTANA, ALTO_VENTANA))
 
 
 pg.display.flip()
-
 ventana = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 mueve_dere = False
 mueve_izq = False
 
 juego_ejecutandose = True
 jugador = Jugador(300,200,5,5)
-mueve_dere = False
-mueve_izq = False
-saltando = False
 dispara = False
 jugador.cayendo = True
 
 while juego_ejecutandose:
-
-
     #MIENTRAS EL JUGADOR ESTÉ VIVO SE TOMAN TODOS LOS MOVIMIENTOS
     if jugador.jugador_vivo:
-        muerto = False
         jugador.movimiento_lateral(mueve_dere,mueve_izq)
         jugador.animacion()
-        cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,jugador.cayendo,muerto)
+        cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,jugador.cayendo,jugador.jugador_vivo)
     else:
-        muerto = True
         mueve_dere = False
         mueve_izq = False
+        jugador.movimiento_lateral(mueve_dere,mueve_izq)
+        
         jugador.animacion()
+        cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,jugador.cayendo,jugador.jugador_vivo)
+        
     cuadrado = pg.draw.rect(ventana,color_1,pg.Rect(100,200,60,60))
     enemies = pg.sprite.Group()
     enemy = Enemigo()
@@ -51,6 +47,7 @@ while juego_ejecutandose:
 
     if colision:
         print("COLISION!")
+        jugador.jugador_vivo = False
 #ventana = pg.image.load(R"assets\img\background\background.png")
     lista_eventos = pg.event.get()
     
@@ -69,7 +66,9 @@ while juego_ejecutandose:
                 if event.key == pg.K_e:
                     dispara = True
                     print("Ataco")
-
+                if event.key == pg.K_o:
+                    jugador.jugador_vivo = False
+                    print("Ataco")
                 if (event.key == pg.K_UP) and (not jugador.cayendo):
                     jugador.salta = True
                     jugador.cayendo = True
@@ -88,6 +87,7 @@ while juego_ejecutandose:
 
     screen.blit(back_img, back_img.get_rect())
     pg.draw.line(ventana,color_1,(0,300),(ANCHO_VENTANA,300))
+    pg.draw.line(ventana,color_1,(0,200),(ANCHO_VENTANA,200))
     #screen.blit(back_img, back_img.get_rect())
     enemies.update()
     enemies.draw(screen)

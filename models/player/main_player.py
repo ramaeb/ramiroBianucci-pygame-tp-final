@@ -49,7 +49,10 @@ class Jugador(pg.sprite.Sprite):
             self.tiempo_animacion = pg.time.get_ticks()
             self.index_animacion += 1
         if self.index_animacion >= len(self.lista_animacion[self.accion]):
-            self.index_animacion = 0
+            if self.accion == 4:
+                self.index_animacion = len(self.lista_animacion[self.accion])-1
+            else:
+                self.index_animacion = 0
         
     def cambio_accion(self,accion):
         if accion != self.accion:
@@ -63,7 +66,6 @@ class Jugador(pg.sprite.Sprite):
         # sirven para parar movimientos o para las mismas colisiones.
         dx = 0
         dy = 0
-
         if mueve_dere: 
             dx = self.velocidad
             self.direccion = True
@@ -72,6 +74,7 @@ class Jugador(pg.sprite.Sprite):
             dx = -self.velocidad
             self.direccion = False
             self.flip = True
+        
         #Seteo de la posicion del jugador
         if self.cayendo == True:
             if self.salta:
@@ -80,22 +83,32 @@ class Jugador(pg.sprite.Sprite):
             else:
                 self.vel_y += GRAVEDAD
                 dy += self.vel_y
-        
+    
         #COLISION PISO INVENTADO
-        if self.rect.bottom + dy > 300:
-            dy = 300 - self.rect.bottom
-            self.colisiona = True
-            self.cayendo = False
-        if self.rect.left <= 0:
-            self.rect.left = 0
-            print("MURO IZ")
-        if self.rect.right + dx > ANCHO_VENTANA:
-            dx = ANCHO_VENTANA - self.rect.right
-            print("MURO")
-        
-        self.rect.x += dx
-        self.rect.y += dy
+        if self.jugador_vivo:
+            if self.rect.bottom + dy > 300:
+                dy = 300 - self.rect.bottom
+                self.colisiona = True
+                self.cayendo = False
 
+            if self.rect.left <= 0:
+                self.rect.left = 0
+                print("MURO IZ")
+            if self.rect.right + dx > ANCHO_VENTANA:
+                dx = ANCHO_VENTANA - self.rect.right
+                print("MURO")
+            
+            self.rect.x += dx
+            self.rect.y += dy
+        else:
+            self.vel_y += GRAVEDAD
+            dy += self.vel_y
+            if self.rect.bottom + dy > 300:
+                dy = 300 - self.rect.bottom + 30
+                self.colisiona = True
+                self.cayendo = False
+            self.rect.x += dx
+            self.rect.y += dy
         
 
 
