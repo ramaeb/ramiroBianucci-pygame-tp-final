@@ -4,6 +4,7 @@ class JugadorSprite():
     pass
 
 #ALTERNA EL MOVIMIENTO DEL IDLE Y DEL WALK EN SPRITES.
+'''
 def cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,saltando,vivo):
     if vivo:
         if (saltando and (mueve_dere or mueve_izq)):
@@ -20,3 +21,5 @@ def cambio_sprites_movimiento(mueve_dere,mueve_izq,jugador,dispara,saltando,vivo
             jugador.cambio_accion(0)
     else:
         jugador.cambio_accion(4)
+
+'''
