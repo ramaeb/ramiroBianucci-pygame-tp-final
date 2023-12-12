@@ -1,4 +1,5 @@
 import pygame as pg
+from nivel import *
 from pygame import mixer
 from models.auxiliar import *
 from models.player.bala import *
@@ -15,7 +16,7 @@ pg.mixer.pre_init(44100,-16,2,512)
 mixer.init()
 pg.init()
 
-
+#MUNDO
 
 clock = pg.time.Clock()
 color = (0,200,0)
@@ -29,8 +30,14 @@ pg.display.flip()
 ventana = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 juego_ejecutandose = True
 jugador = Jugador(300,200,3,5)
-jugador.disparando = False
 jugador.cayendo = True
+
+def dibujo_grid():
+
+    tile_size = 70
+    for line in range(0,30):
+        pg.draw.line(screen, (255, 255, 255), (0, line * tile_size), (ANCHO_VENTANA, line * tile_size))
+        pg.draw.line(screen, (255, 255, 255), (line * tile_size, 0), (line * tile_size, ALTO_VENTANA))
 
 while juego_ejecutandose:
     #MIENTRAS EL JUGADOR ESTÉ VIVO SE TOMAN TODOS LOS MOVIMIENTOS
@@ -48,13 +55,21 @@ while juego_ejecutandose:
         jugador.jugador_vivo = False
     #COLSION---
 
-    lista_eventos = pg.event.get()    
+    lista_eventos = pg.event.get()
+    '''
+    USAR FORMS PARA LOS NIVELES Y LOS UPDATES HACERLOS DENTRO DEL NIVEL. CORTA
+    form_activo = Form.get_active()
+    form_activo.draw()
+    form_activo.upd    
+    '''
     for event in lista_eventos:
+
         match event.type:
             case pg.QUIT:
                 print('Estoy CERRANDO el JUEGO')
                 juego_ejecutandose = False
                 break
+            
             #SETEO DE TECLAS
             case pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
@@ -89,10 +104,12 @@ while juego_ejecutandose:
     #screen.blit(back_img, back_img.get_rect())
     enemies.update()
     enemies.draw(screen)
+    #centralizar en nivel(class) con metodo draw
     jugador.draw(screen)
     jugador.update()
     bullet_group.draw(screen)
     bullet_group.update()
+    dibujo_grid()
     delta_ms = clock.tick(FPS)
     pg.display.update()
 

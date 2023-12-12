@@ -48,7 +48,6 @@ class Jugador(pg.sprite.Sprite):
         #cambio de imagen, segun el frame elegido
         self.image = self.lista_animacion[self.accion][self.index_animacion]
         #empiezo el timer para seguir cambiando los sprites de la animacion
-        
         if pg.time.get_ticks() - self.tiempo_animacion > COOLDOWN_ANIMACION:
             self.tiempo_animacion = pg.time.get_ticks()
             self.index_animacion += 1
@@ -63,7 +62,6 @@ class Jugador(pg.sprite.Sprite):
             self.accion = accion
             self.index_animacion = 0
             self.tiempo_animacion = pg.time.get_ticks()
-
 
     def movimiento(self,mueve_dere,mueve_izq):    
         #Coordenadas predecibles para el movimiento, 
