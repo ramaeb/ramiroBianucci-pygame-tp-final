@@ -19,7 +19,7 @@ class Jugador(pg.sprite.Sprite):
         self.tiempo_animacion = pg.time.get_ticks()
         self.accion = 0
         self.colisiona = False #Flag para la colision
-        self.cayendo = False #Flag para la caida del jugador
+        self.cayendo = True #Flag para la caida del jugador
         self.index_animacion = 0
         self.salta = False #Activa el salto
         self.cooldown_disparo = 20
@@ -42,6 +42,9 @@ class Jugador(pg.sprite.Sprite):
         self.image = self.lista_animacion[self.accion][self.index_animacion]
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+
 
     def animacion(self):
         COOLDOWN_ANIMACION = 100
@@ -63,7 +66,7 @@ class Jugador(pg.sprite.Sprite):
             self.index_animacion = 0
             self.tiempo_animacion = pg.time.get_ticks()
 
-    def movimiento(self,mueve_dere,mueve_izq):    
+    def movimiento(self,mueve_dere,mueve_izq,mundo):    
         #Coordenadas predecibles para el movimiento, 
         # sirven para parar movimientos o para las mismas colisiones.
         dx = 0
@@ -80,37 +83,50 @@ class Jugador(pg.sprite.Sprite):
         #Seteo de la posicion del jugador
         if self.cayendo == True:
             if self.salta:
-                self.vel_y = -15
+                self.vel_y = -17
                 self.salta = False
             else:
                 self.vel_y += GRAVEDAD
                 dy += self.vel_y
-    
-        #COLISION PISO INVENTADO
+        
+        #APLICO GRAVEDAD
+        self.vel_y += 1
+        if self.vel_y > 10:
+            self.vel_y = 10
+        dy += self.vel_y
+        
+        #COLISION
         if self.jugador_vivo:
-            if self.rect.bottom + dy > 300:
-                dy = 300 - self.rect.bottom
-                self.colisiona = True
-                self.cayendo = False
-
             if self.rect.left <= 0:
                 self.rect.left = 0
                 print("MURO IZ")
             if self.rect.right + dx > ANCHO_VENTANA:
                 dx = ANCHO_VENTANA - self.rect.right
                 print("MURO")
-            
-            self.rect.x += dx
-            self.rect.y += dy
         else:
             self.vel_y += GRAVEDAD
             dy += self.vel_y
-            if self.rect.bottom + dy > 300:
-                dy = 300 - self.rect.bottom + 30
-                self.colisiona = True
-                self.cayendo = False
-            self.rect.x += dx
-            self.rect.y += dy
+        
+        for tile in mundo.tile_list:
+            if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
+                dx = 0
+			#check for collision in the y direction
+            if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
+				#check if below the ground, i.e. jumping
+                if self.vel_y < 0:
+                    self.vel_y = 0
+                    dy = tile[1].bottom - self.rect.top
+                    print("COO")
+				#check if above the ground, i.e. falling
+                elif self.vel_y >= 0:
+                    print("CaOa")
+                    self.vel_y = 0
+                    self.cayendo =  False
+                    dy = tile[1].top - self.rect.bottom
+                
+        
+        self.rect.x += dx
+        self.rect.y += dy
         
     def cambio_sprites_movimiento(self,mueve_dere,mueve_izq,jugador,dispara,cayendo,jugador_vivo):
         if jugador_vivo:
@@ -139,9 +155,9 @@ class Jugador(pg.sprite.Sprite):
         #Dibuja el personaje en pantalla, tambien dibuja si esta el flipeo de la imagen.
         screen.blit(pg.transform.flip(self.image,self.flip,False),self.rect) 
 
-    def update(self):
+    def update(self,mundo):
         if self.jugador_vivo:
-            self.movimiento(self.mueve_dere,self.mueve_izq)
+            self.movimiento(self.mueve_dere,self.mueve_izq,mundo)
             self.animacion()
             self.cambio_sprites_movimiento(self.mueve_dere,self.mueve_izq,self,self.disparando,self.cayendo,self.jugador_vivo)
             if self.disparando:
@@ -150,10 +166,9 @@ class Jugador(pg.sprite.Sprite):
         else:
             self.mueve_dere = False
             self.mueve_izq = False
-            self.movimiento(self.mueve_dere,self.mueve_izq)
+            self.movimiento(self.mueve_dere,self.mueve_izq,mundo)
             self.animacion()
             self.cambio_sprites_movimiento(self.mueve_dere,self.mueve_izq,self,self.disparando,self.cayendo,self.jugador_vivo)
         self.animacion()
-        print(self.cooldown_disparo)
         if self.cooldown_disparo > 0:
             self.cooldown_disparo -= 1
