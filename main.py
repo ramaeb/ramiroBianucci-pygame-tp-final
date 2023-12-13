@@ -24,8 +24,6 @@ salto_fx.set_volume(0.3)
 
 
 clock = pg.time.Clock()
-color = (0,200,0)
-color_1 = (0,0,0)
 back_img = pg.image.load('./assets/img/background/3.png')
 back_img = pg.transform.scale(back_img, (ANCHO_VENTANA, ALTO_VENTANA))
 
@@ -111,7 +109,6 @@ while juego_ejecutandose:
     nivel.update()
     screen.blit(back_img, back_img.get_rect())
     mundo.draw()
-    pg.draw.line(ventana,color_1,(0,300),(ANCHO_VENTANA,300))
     #screen.blit(back_img, back_img.get_rect())
     #centralizar en nivel(class) con metodo draw
     jugador.draw(screen)
