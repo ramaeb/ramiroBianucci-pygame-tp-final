@@ -1,12 +1,15 @@
 import pygame as pg
+import random
 from ..constantes import *
+from ..player.bala import *
 import os
-
 class Enemigo(pg.sprite.Sprite):
 
-    def __init__(self,x,y,escala,velocidad,puntos=0,vidas=3):
+    def __init__(self,x,y,escala,velocidad,mundo,jugador,puntos=0,vidas=3):
         #HEREDO FUNCIONALIDADES DE LA CLASE SPRITE
         pg.sprite.Sprite.__init__(self)
+        self.jugador = jugador
+        self.mundo = mundo
         self.vidas = vidas
         self.puntos = puntos
         self.disparando = False
@@ -25,6 +28,12 @@ class Enemigo(pg.sprite.Sprite):
         self.cooldown_disparo = 20
         self.mueve_dere = False
         self.mueve_izq = False
+        self.contador_movimiento = 0
+        self.idling = False
+        self.idling_counter = 0
+        self.ai_moving_right = False
+        self.ai_moving_left = False
+        self.vision = pg.Rect(0, 0, 100, 20)
         #IDLE
         #CARGA LAS ANIMACIONES
         tipo_animacion = ['idle','walk','death']
@@ -65,7 +74,7 @@ class Enemigo(pg.sprite.Sprite):
             self.index_animacion = 0
             self.tiempo_animacion = pg.time.get_ticks()
 
-    def movimiento(self,mueve_dere,mueve_izq,mundo):    
+    def movimiento(self,mueve_dere,mueve_izq):    
         #Coordenadas predecibles para el movimiento, 
         # sirven para parar movimientos o para las mismas colisiones.
         dx = 0
@@ -79,36 +88,11 @@ class Enemigo(pg.sprite.Sprite):
             self.direccion = -1
             self.flip = True
         
-        #Seteo de la posicion del jugador
-        if self.cayendo == True:
-            if self.salta:
-                self.vel_y = -17
-                self.salta = False
-            else:
-                self.vel_y += GRAVEDAD
-                dy += self.vel_y
-        
-        #APLICO GRAVEDAD
-        self.vel_y += 1
-        if self.vel_y > 10:
-            self.vel_y = 10
-        dy += self.vel_y
-        
-        #COLISION
-        if self.enemigo_vivo:
-            if self.rect.left <= 0:
-                self.rect.left = 0
-                print("MURO IZ")
-            if self.rect.right + dx > ANCHO_VENTANA:
-                dx = ANCHO_VENTANA - self.rect.right
-                print("MURO")
-        else:
-            self.vel_y += GRAVEDAD
-            dy += self.vel_y
-        
-        for tile in mundo.tile_list:
+        for tile in self.mundo.tile_list:
             if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                 dx = 0
+                self.direccion *= -1
+                self.contador_movimiento = 0
 			#check for collision in the y direction
             if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
 				#check if below the ground, i.e. jumping
@@ -124,11 +108,9 @@ class Enemigo(pg.sprite.Sprite):
         
         self.rect.x += dx
         self.rect.y += dy
-    def cambio_sprites_movimiento(self,mueve_dere,mueve_izq,enemigo,dispara,cayendo,enemigo_vivo):
+    def cambio_sprites_movimiento(self,mueve_dere,mueve_izq,enemigo,enemigo_vivo):
         if enemigo_vivo:
-            if (cayendo and (mueve_dere or mueve_izq)):
-                enemigo.cambio_accion(2)
-            elif (mueve_dere or mueve_izq):
+            if (mueve_dere or mueve_izq):
                 enemigo.cambio_accion(1)
             else:
                 enemigo.cambio_accion(0)
@@ -138,25 +120,61 @@ class Enemigo(pg.sprite.Sprite):
     def draw(self,screen):
         #Dibuja el personaje en pantalla, tambien dibuja si esta el flipeo de la imagen.
         screen.blit(pg.transform.flip(self.image,self.flip,False),self.rect) 
+    def disparo(self):
+            if self.cooldown_disparo == 0:
+                self.cooldown_disparo = 20
+                bala = Bala(self.rect.centerx + (0.8 * self.rect.size[0] * self.direccion) , self.rect.centery, self.direccion)
+                bullet_group.add(bala)
 
-    def update(self,mundo):
+    def ia(self):
         if self.enemigo_vivo:
-            self.movimiento(self.mueve_dere,self.mueve_izq,mundo)
-            self.animacion()
-            self.cambio_sprites_movimiento(self.mueve_dere,self.mueve_izq,self,self.disparando,self.cayendo,self.enemigo_vivo)
-            if self.disparando:
-                print("disparando")
+            if self.idling == False and random.randint(1, 200) == 1:
+                    self.cambio_accion(0)
+                    self.idling = True
+                    self.idling_counter = 50
+                #check if the ai in near the player
+            if self.vision.colliderect(self.jugador.rect):
+				#ATACA
+                self.velocidad = 15
                 self.disparo()
-            if self.vidas == 0:
-                self.enemigo_vivo = False
+            else:
+                    if self.idling == False:
+                        if self.direccion == 1:
+                            self.ai_moving_right = True
+                        else:
+                            self.ai_moving_right = False
+                        
+                        ai_moving_left = not self.ai_moving_right
+                        self.movimiento(self.ai_moving_right,ai_moving_left)
+                        self.cambio_accion(1)#1: run
+                        self.contador_movimiento += 1
+                        #update ai vision as the enemy moves
+                        self.vision.center = (self.rect.centerx + 100 * self.direccion, self.rect.centery)
+
+                        if self.contador_movimiento > 20:
+                            self.direccion *= -1
+                            self.contador_movimiento *= -1
+                    else:
+                        self.idling_counter -= 1
+                        if self.idling_counter <= 0:
+                            self.idling = False
         else:
-            self.rect.y += 30
             self.mueve_dere = False
             self.mueve_izq = False
-            self.movimiento(self.mueve_dere,self.mueve_izq,mundo)
+            self.movimiento(self.ai_moving_right,self.ai_moving_left)
             self.animacion()
-            self.cambio_sprites_movimiento(self.mueve_dere,self.mueve_izq,self,self.disparando,self.cayendo,self.enemigo_vivo)
+            self.cambio_sprites_movimiento(self.ai_moving_right,self.ai_moving_left,self,self.enemigo_vivo)
             self.rect.y += 60
+            
+
+    def update(self):
+        self.ia()
         self.animacion()
+        self.cambio_sprites_movimiento(self.ai_moving_right,self.ai_moving_left,self,self.enemigo_vivo)
+        if self.disparando:
+            print("disparando")
+            self.disparo()
+        if self.vidas == 0:
+            self.enemigo_vivo = False
         if self.cooldown_disparo > 0:
             self.cooldown_disparo -= 1

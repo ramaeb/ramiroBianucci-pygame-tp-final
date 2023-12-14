@@ -15,7 +15,7 @@ from models.player.main_player import Jugador
 screen = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 
 clock = pg.time.Clock()
-enemigo = Enemigo(600,200,3,5)
+
 
 fruta_grupo = pg.sprite.Group()
 fruta = Item(100,600,fruta_img)
@@ -35,9 +35,10 @@ pg.display.flip()
 #SETEO VARIABLES
 ventana = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 juego_ejecutandose = True
-jugador = Jugador(300,200,3,5)
-
 mundo = Mundo(world_data_1)
+jugador = Jugador(300,200,3,5)
+enemigo = Enemigo(300,600,3,5,mundo,jugador)
+
 cancion_fx.play()
 while juego_ejecutandose:
     #MIENTRAS EL JUGADOR ESTÉ VIVO SE TOMAN TODOS LOS MOVIMIENTOS
@@ -63,10 +64,10 @@ while juego_ejecutandose:
     #centralizar en nivel(class) con metodo draw
     jugador.draw(screen)
     enemigo.draw(screen)
-    enemigo.update(mundo)
+    enemigo.update()
     jugador.update(mundo)
     bullet_group.draw(screen)
-    bullet_group.update()
+    bullet_group.update(jugador)
     fruta_grupo.draw(screen)
     fruta_grupo.update(jugador)
     dibujo_grid(screen)

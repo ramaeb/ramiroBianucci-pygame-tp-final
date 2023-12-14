@@ -11,10 +11,13 @@ class Bala(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.direccion = direccion
-    def update(self):
+    def update(self,jugador):
         #movimiento bala
         self.rect.x = self.rect.x + (self.velocidad*self.direccion)
         #elimina balas del escenario
         if (self.rect.right < 0)or (self.rect.left > ANCHO_VENTANA):
             self.kill()
+        if pg.sprite.collide_rect(self, jugador):
+            self.kill()
+            jugador.vidas -= 1
 
