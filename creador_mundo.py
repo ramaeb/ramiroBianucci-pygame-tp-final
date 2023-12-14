@@ -1,5 +1,5 @@
 import pygame as pg
-from models.constantes import TILE_SIZE
+from models.constantes import TILE_SIZE,ANCHO_VENTANA,ALTO_VENTANA
 class Mundo():
     def __init__(self,data):
         self.tile_list = []
@@ -30,10 +30,7 @@ class Mundo():
         for tile in self.tile_list:
             screen.blit(tile[0],tile[1])
 
-def dibujo_grid():
-    TILE_SIZE = 50
-'''
+def dibujo_grid(screen):
     for line in range(0,30):
-        pg.draw.line(screen, (255, 255, 255), (0, line * tile_size), (ANCHO_VENTANA, line * tile_size))
-        pg.draw.line(screen, (255, 255, 255), (line * tile_size, 0), (line * tile_size, ALTO_VENTANA))
-'''
+        pg.draw.line(screen, (255, 255, 255), (0, line * TILE_SIZE), (ANCHO_VENTANA, line * TILE_SIZE))
+        pg.draw.line(screen, (255, 255, 255), (line * TILE_SIZE, 0), (line * TILE_SIZE, ALTO_VENTANA))

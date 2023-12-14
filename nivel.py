@@ -1,12 +1,12 @@
 import pygame as pg
 from datos import *
-class Nivel():
-    def __init__(self,lista_eventos,jugador):
+class Juego():
+    def __init__(self,lista_eventos,jugador,screen):
         self.lista_eventos = lista_eventos
         self.jugador = jugador
+        self.screen = screen
     def update(self):
         for event in self.lista_eventos:
-
             match event.type:
                 
                 #SETEO DE TECLAS
@@ -20,8 +20,8 @@ class Nivel():
                         print("Ataco")
                     #test muerte
                     if event.key == pg.K_o:
-                        self.jugador.jugador_vivo = False
-                        print("MUERTO")
+                        self.jugador.vidas -= 1
+                        print("Auch!")
                     if (event.key == pg.K_UP) and (not self.jugador.cayendo):
                         salto_fx.play()
                         self.jugador.salta = True
@@ -36,5 +36,14 @@ class Nivel():
                         self.jugador.mueve_izq = False
                     if event.key == pg.K_e:
                         self.jugador.disparando = False
+        if self.jugador.vidas == 3:
+            self.screen.blit(vida_img, (0, 0))
+            self.screen.blit(vida_img, (60, 0))
+            self.screen.blit(vida_img, (120, 0))
+        elif self.jugador.vidas == 2:
+            self.screen.blit(vida_img, (0, 0))
+            self.screen.blit(vida_img, (60, 0))
+        elif self.jugador.vidas == 1:
+            self.screen.blit(vida_img, (0, 0)) 
 
 

@@ -6,10 +6,10 @@ from .bala import *
 
 class Jugador(pg.sprite.Sprite):
 
-    def __init__(self,x,y,escala,velocidad,puntos=0,vida=3):
+    def __init__(self,x,y,escala,velocidad,puntos=0,vidas=3):
         #HEREDO FUNCIONALIDADES DE LA CLASE SPRITE
         pg.sprite.Sprite.__init__(self)
-        self.vida = vida
+        self.vidas = vidas
         self.puntos = puntos
         self.disparando = False
         self.jugador_vivo = True #VARIABLE PARA SABER SI EL JUGADOR ESTÁ VIVO.
@@ -127,7 +127,6 @@ class Jugador(pg.sprite.Sprite):
         
         self.rect.x += dx
         self.rect.y += dy
-        
     def cambio_sprites_movimiento(self,mueve_dere,mueve_izq,jugador,dispara,cayendo,jugador_vivo):
         if jugador_vivo:
             if (cayendo and (mueve_dere or mueve_izq)):
@@ -163,6 +162,8 @@ class Jugador(pg.sprite.Sprite):
             if self.disparando:
                 print("disparando")
                 self.disparo()
+            if self.vidas == 0:
+                self.jugador_vivo = False
         else:
             self.mueve_dere = False
             self.mueve_izq = False
