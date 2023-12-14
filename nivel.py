@@ -1,12 +1,13 @@
 import pygame as pg
 from datos import *
+from creador_mundo import *
 class Juego():
     def __init__(self,lista_eventos,jugador,screen,enemigo):
         self.lista_eventos = lista_eventos
         self.jugador = jugador
         self.screen = screen
         self.enemigo = enemigo
-    def update(self):
+    def update(self,screen=0,tiempo=0):
         for event in self.lista_eventos:
             match event.type:
                 
@@ -19,6 +20,10 @@ class Juego():
                     if (event.key == pg.K_e):
                         self.jugador.disparando = True
                         print("Ataco")
+                    if event.type == pg.KEYDOWN:
+                        if event.key == pg.K_p:
+                            juego_ejecutandose = pausa(tiempo,screen)
+                            return juego_ejecutandose
                     #test danio
                     if event.key == pg.K_o:
                         self.jugador.vidas -= 1

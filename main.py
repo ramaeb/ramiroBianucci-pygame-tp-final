@@ -6,6 +6,7 @@ from models.player.bala import *
 from models.enemy.main_enemy import *
 from models.fruta import *
 from creador_mundo import *
+from creador_mundo import *
 from models.enemy.main_enemy import Enemigo
 from models.constantes import (
     ALTO_VENTANA, ANCHO_VENTANA, FPS
@@ -63,8 +64,8 @@ while juego_ejecutandose:
     #screen.blit(back_img, back_img.get_rect())
     #centralizar en nivel(class) con metodo draw
     if jugador.jugador_vivo == False:
-            mensaje_muerte = fuente.render("MUERTO",False,(0,0,0))
-            screen.blit(mensaje_muerte,(350,400))
+            mensaje_muerte = fuente.render("GAME OVER",True,(0,0,0))
+            screen.blit(mensaje_muerte,(300,400))
             jugador.draw(screen)
             jugador.update(mundo)
             nivel.update()
@@ -82,8 +83,14 @@ while juego_ejecutandose:
         bullet_group.update(jugador,enemigo)
         fruta_grupo.draw(screen)
         fruta_grupo.update(jugador)
-        nivel.update()
+        tiempo = pg.time.get_ticks()//1000
+        if tiempo > 30:
+                pg.quit()
+        nivel.update(screen,tiempo)
+
+
         
+    
 
     #MANEJO DE VIDAS !!
     
