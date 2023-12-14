@@ -67,10 +67,9 @@ while juego_ejecutandose:
     enemigo.update()
     jugador.update(mundo)
     bullet_group.draw(screen)
-    bullet_group.update(jugador)
+    bullet_group.update(jugador,enemigo)
     fruta_grupo.draw(screen)
     fruta_grupo.update(jugador)
-    dibujo_grid(screen)
     nivel.update()
 
     #MANEJO DE VIDAS !!

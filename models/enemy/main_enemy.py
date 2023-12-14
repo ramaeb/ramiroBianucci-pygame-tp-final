@@ -93,13 +93,13 @@ class Enemigo(pg.sprite.Sprite):
                 dx = 0
                 self.direccion *= -1
                 self.contador_movimiento = 0
-			#check for collision in the y direction
+			#CHEQUEA COLISION TILE X Y FLIP SI CHOCA CON TILE
             if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
-				#check if below the ground, i.e. jumping
+				#CHEQUEA Y SALTANDO //INDIFERENTE EN ENEMIGO
                 if self.vel_y < 0:
                     self.vel_y = 0
                     dy = tile[1].bottom - self.rect.top
-				#check if above the ground, i.e. falling
+				#CHEQUEA SI COLISIONA EN Y //PISO
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     self.cayendo =  False
@@ -132,12 +132,13 @@ class Enemigo(pg.sprite.Sprite):
                     self.cambio_accion(0)
                     self.idling = True
                     self.idling_counter = 50
-                #check if the ai in near the player
+                #SE FIJA SI ESTA CERCA DEL JUGADOR
             if self.vision.colliderect(self.jugador.rect):
 				#ATACA
                 self.velocidad = 15
                 self.disparo()
             else:
+                    print(self.idling_counter)
                     if self.idling == False:
                         if self.direccion == 1:
                             self.ai_moving_right = True
@@ -148,8 +149,8 @@ class Enemigo(pg.sprite.Sprite):
                         self.movimiento(self.ai_moving_right,ai_moving_left)
                         self.cambio_accion(1)#1: run
                         self.contador_movimiento += 1
-                        #update ai vision as the enemy moves
-                        self.vision.center = (self.rect.centerx + 100 * self.direccion, self.rect.centery)
+                        #CENTRA LA VISION DEL ENEMIGO CUANDO SE MUEVE
+                        self.vision.center = (self.rect.centerx + 150 * self.direccion, self.rect.centery)
 
                         if self.contador_movimiento > 20:
                             self.direccion *= -1

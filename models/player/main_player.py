@@ -113,13 +113,13 @@ class Jugador(pg.sprite.Sprite):
             for tile in mundo.tile_list:
                 if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                     dx = 0
-                #check for collision in the y direction
+                #colision X
                 if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
-                    #check if below the ground, i.e. jumping
+                    #CHEQUEO SI ESTA ABAJO DEL TILE
                     if self.vel_y < 0:
                         self.vel_y = 0
                         dy = tile[1].bottom - self.rect.top
-                    #check if above the ground, i.e. falling
+                    #CHEQUEO SI ESTA ARRIBA DEL TILE
                     elif self.vel_y >= 0:
                         self.vel_y = 0
                         self.cayendo =  False
