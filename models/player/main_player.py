@@ -6,9 +6,11 @@ from .bala import *
 
 class Jugador(pg.sprite.Sprite):
 
-    def __init__(self,x,y,escala,velocidad):
+    def __init__(self,x,y,escala,velocidad,puntos=0,vida=3):
         #HEREDO FUNCIONALIDADES DE LA CLASE SPRITE
         pg.sprite.Sprite.__init__(self)
+        self.vida = vida
+        self.puntos = puntos
         self.disparando = False
         self.jugador_vivo = True #VARIABLE PARA SABER SI EL JUGADOR ESTÁ VIVO.
         self.velocidad = velocidad #Cuantos pixeles se mueve el personaje al presionar tecla movimiento.
@@ -116,10 +118,8 @@ class Jugador(pg.sprite.Sprite):
                 if self.vel_y < 0:
                     self.vel_y = 0
                     dy = tile[1].bottom - self.rect.top
-                    print("COO")
 				#check if above the ground, i.e. falling
                 elif self.vel_y >= 0:
-                    print("CaOa")
                     self.vel_y = 0
                     self.cayendo =  False
                     dy = tile[1].top - self.rect.bottom

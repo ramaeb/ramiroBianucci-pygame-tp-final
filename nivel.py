@@ -1,4 +1,5 @@
 import pygame as pg
+from datos import *
 class Nivel():
     def __init__(self,lista_eventos,jugador):
         self.lista_eventos = lista_eventos
@@ -22,7 +23,7 @@ class Nivel():
                         self.jugador.jugador_vivo = False
                         print("MUERTO")
                     if (event.key == pg.K_UP) and (not self.jugador.cayendo):
-                        #salto_fx.play()
+                        salto_fx.play()
                         self.jugador.salta = True
                         self.jugador.cayendo = True
         
