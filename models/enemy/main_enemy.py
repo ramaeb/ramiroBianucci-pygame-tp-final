@@ -152,7 +152,7 @@ class Enemigo(pg.sprite.Sprite):
                         #CENTRA LA VISION DEL ENEMIGO CUANDO SE MUEVE
                         self.vision.center = (self.rect.centerx + 150 * self.direccion, self.rect.centery)
 
-                        if self.contador_movimiento > 20:
+                        if self.contador_movimiento > 10:
                             self.direccion *= -1
                             self.contador_movimiento *= -1
                     else:
