@@ -1,10 +1,11 @@
 import pygame as pg
 from datos import *
 class Juego():
-    def __init__(self,lista_eventos,jugador,screen):
+    def __init__(self,lista_eventos,jugador,screen,enemigo):
         self.lista_eventos = lista_eventos
         self.jugador = jugador
         self.screen = screen
+        self.enemigo = enemigo
     def update(self):
         for event in self.lista_eventos:
             match event.type:
@@ -18,9 +19,11 @@ class Juego():
                     if (event.key == pg.K_e):
                         self.jugador.disparando = True
                         print("Ataco")
-                    #test muerte
+                    #test danio
                     if event.key == pg.K_o:
                         self.jugador.vidas -= 1
+                        self.enemigo.vidas -= 1
+                        hit_fx.play()
                         print("Auch!")
                     if (event.key == pg.K_UP) and (not self.jugador.cayendo):
                         salto_fx.play()

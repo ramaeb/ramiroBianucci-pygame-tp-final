@@ -5,6 +5,8 @@ from models.constantes import *
 pg.mixer.pre_init(44100,-16,2,512)
 mixer.init()
 pg.init()
+hit_fx = pg.mixer.Sound('assets/img/sounds/hit.wav')
+hit_fx.set_volume(0.3)
 fruta_fx = pg.mixer.Sound('assets/img/sounds/fruta_colect.wav')
 fruta_fx.set_volume(0.3)
 salto_fx = pg.mixer.Sound('assets/img/sounds/salto.wav')

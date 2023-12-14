@@ -170,6 +170,7 @@ class Jugador(pg.sprite.Sprite):
             self.movimiento(self.mueve_dere,self.mueve_izq,mundo)
             self.animacion()
             self.cambio_sprites_movimiento(self.mueve_dere,self.mueve_izq,self,self.disparando,self.cayendo,self.jugador_vivo)
+            self.rect.y += 30
         self.animacion()
         if self.cooldown_disparo > 0:
             self.cooldown_disparo -= 1
