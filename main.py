@@ -64,11 +64,15 @@ while juego_ejecutandose:
     #centralizar en nivel(class) con metodo draw
     if jugador.jugador_vivo == False:
             mensaje_muerte = fuente.render("MUERTO",False,(0,0,0))
-            screen.blit(mensaje_muerte,(350,500))
+            screen.blit(mensaje_muerte,(350,400))
             jugador.draw(screen)
             jugador.update(mundo)
             nivel.update()
-            cancion_fx.fadeout(5)
+            cancion_fx.fadeout(2)
+    elif jugador.puntos == 500:
+            mensaje_muerte = fuente.render("WIN",True,(0,0,0))
+            screen.blit(mensaje_muerte,(350,300))
+            cancion_fx.fadeout(2)
     else:
         enemigo.draw(screen)
         enemigo.update()
@@ -79,6 +83,7 @@ while juego_ejecutandose:
         fruta_grupo.draw(screen)
         fruta_grupo.update(jugador)
         nivel.update()
+        
 
     #MANEJO DE VIDAS !!
     
