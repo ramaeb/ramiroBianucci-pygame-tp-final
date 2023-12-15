@@ -11,7 +11,6 @@ class Enemigo(pg.sprite.Sprite):
         self.jugador = jugador
         self.mundo = mundo
         self.vidas = vidas
-        self.puntos = puntos
         self.disparando = False
         self.enemigo_vivo = True #VARIABLE PARA SABER SI EL JUGADOR ESTÁ VIVO.
         self.velocidad = velocidad #Cuantos pixeles se mueve el personaje al presionar tecla movimiento.
