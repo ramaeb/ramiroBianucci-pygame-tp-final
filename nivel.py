@@ -22,8 +22,8 @@ class Juego():
                         print("Ataco")
                     if event.type == pg.KEYDOWN:
                         if event.key == pg.K_p:
-                            juego_ejecutandose = pausa(tiempo,screen)
-                            return juego_ejecutandose
+                            juego_ejecutandose,tiempo = pausa(tiempo,screen)
+                            return juego_ejecutandose,tiempo
                     #test danio
                     if event.key == pg.K_o:
                         self.jugador.vidas -= 1

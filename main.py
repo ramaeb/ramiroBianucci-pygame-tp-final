@@ -40,7 +40,7 @@ ventana = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 juego_ejecutandose = True
 mundo = Mundo(world_data_1)
 jugador = Jugador(300,200,3,5)
-enemigo = Enemigo(random.randrange(10, 300),600,3,5,mundo,jugador)
+enemigo = Enemigo(300,600,3,5,mundo,jugador)
 
 cancion_fx.play()
 while juego_ejecutandose:
@@ -105,7 +105,6 @@ while juego_ejecutandose:
         screen.blit(muestra_puntos,(500,20))
         screen.blit(Tiempo.update_tiempo(tiempo),(300,20))
     #MANEJO DE VIDAS !!
-    
     delta_ms = clock.tick(FPS)
     pg.display.update()
 

@@ -41,14 +41,13 @@ def pausa(tiempo,screen):
         for event in pg.event.get():
             tiempo_pausa = pg.time.get_ticks()//1000
             tiempo -= tiempo_pausa
-
             if event.type == pg.QUIT:
                 pg.quit()  # Sale del juego si se cierra la ventana
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_p:
                     pausado = False
                     juego_ejecutandose = False
-                    return juego_ejecutandose
+                    return juego_ejecutandose,tiempo
                     
             fuente = pg.font.SysFont("Arial",30)
             mensaje_pausa = fuente.render("JUEGO PAUSADO",False,(0,0,0))
