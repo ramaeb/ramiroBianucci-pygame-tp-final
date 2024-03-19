@@ -1,2 +1,12 @@
 # JUEGO_TP_FINAL
-#El jugador puede moverse de izq a derecha, saltar, disparar, tiene gravedad y colisiona con las paredes, muere al colisionar, el enemigo ataca cuando ve al player, el player tiene vida y cuando se queda sin vidas, muere.
+#Tp para final de programacion/laboratorio 1 de la UTN
+
+
+
+#Para ejecutar:
+
+1- Descargar el zip, extraerlo y abrir la carpeta con visual studio code.
+
+2- ir a main.py con visual studio code y correr el codigo.
+
+3- play
