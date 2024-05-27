@@ -5,11 +5,10 @@ from ..player.bala import *
 import os
 class Enemigo(pg.sprite.Sprite):
 
-    def __init__(self,x,y,escala,velocidad,mundo,jugador,puntos=0,vidas=3):
+    def __init__(self,x,y,escala,velocidad,jugador,puntos=0,vidas=3):
         #HEREDO FUNCIONALIDADES DE LA CLASE SPRITE
         pg.sprite.Sprite.__init__(self)
         self.jugador = jugador
-        self.mundo = mundo
         self.vidas = vidas
         self.disparando = False
         self.enemigo_vivo = True #VARIABLE PARA SABER SI EL JUGADOR ESTÁ VIVO.
@@ -73,7 +72,7 @@ class Enemigo(pg.sprite.Sprite):
             self.index_animacion = 0
             self.tiempo_animacion = pg.time.get_ticks()
 
-    def movimiento(self,mueve_dere,mueve_izq):    
+    def movimiento(self,mueve_dere,mueve_izq,mundo):    
         #Coordenadas predecibles para el movimiento, 
         # sirven para parar movimientos o para las mismas colisiones.
         dx = 0
@@ -86,8 +85,7 @@ class Enemigo(pg.sprite.Sprite):
             dx = -self.velocidad
             self.direccion = -1
             self.flip = True
-        
-        for tile in self.mundo.tile_list:
+        for tile in mundo.tile_list:
             if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                 dx = 0
                 self.direccion *= -1
@@ -167,7 +165,7 @@ class Enemigo(pg.sprite.Sprite):
             self.rect.y += 60
             
 
-    def update(self):
+    def update(self,mundo):
         self.ia()
         self.animacion()
         self.cambio_sprites_movimiento(self.ai_moving_right,self.ai_moving_left,self,self.enemigo_vivo)

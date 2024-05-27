@@ -1,6 +1,10 @@
 import pygame as pg
 from datos import *
 from creador_mundo import *
+nivel_1 = True
+nivel_2 = False
+nivel_3 = False
+niveles = (nivel_1,nivel_2,nivel_3)
 class Juego():
     def __init__(self,lista_eventos,jugador,screen,enemigo):
         self.lista_eventos = lista_eventos
